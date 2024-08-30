@@ -63,3 +63,6 @@ swift:
 terraform:
   - *shared
   - 'terraform/**'
+waf:
+  - *shared
+  - 'waf/**'

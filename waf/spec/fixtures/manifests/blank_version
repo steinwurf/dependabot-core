@@ -1,0 +1,16 @@
+[
+    {
+        "name": "rng",
+        "recurse": false,
+        "resolver": "git",
+        "method": "checkout",
+        "source": "gitlab.com/somewhere/rng.git"
+    },
+    {
+        "name": "rng2",
+        "recurse": false,
+        "resolver": "git",
+        "method": "semver",
+        "source": "gitlab.com/somewhere/rng2.git"
+    }
+]

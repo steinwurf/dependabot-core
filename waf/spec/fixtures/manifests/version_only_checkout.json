@@ -1,0 +1,10 @@
+[
+    {
+        "name": "tunnel",
+        "recurse": false,
+        "resolver": "git",
+        "method": "checkout",
+        "checkout": "13.0.0",
+        "source": "github.com/steinwurf/tunnel.git"
+    }
+]

@@ -202,7 +202,6 @@ docker run --rm -ti \
   -v "$(pwd)/nuget/script:$CODE_DIR/nuget/script" \
   -v "$(pwd)/nuget/spec:$CODE_DIR/nuget/spec" \
   -v "$(pwd)/omnibus/.rubocop.yml:$CODE_DIR/omnibus/.rubocop.yml" \
-  -v "$(pwd)/omnibus/Gemfile:$CODE_DIR/omnibus/Gemfile" \
   -v "$(pwd)/omnibus/dependabot-omnibus.gemspec:$CODE_DIR/omnibus/dependabot-omnibus.gemspec" \
   -v "$(pwd)/omnibus/lib:$CODE_DIR/omnibus/lib" \
   -v "$(pwd)/pub/.rubocop.yml:$CODE_DIR/pub/.rubocop.yml" \
@@ -227,6 +226,11 @@ docker run --rm -ti \
   -v "$(pwd)/terraform/lib:$CODE_DIR/terraform/lib" \
   -v "$(pwd)/terraform/script:$CODE_DIR/terraform/script" \
   -v "$(pwd)/terraform/spec:$CODE_DIR/terraform/spec" \
+  -v "$(pwd)/waf/.rubocop.yml:$CODE_DIR/waf/.rubocop.yml" \
+  -v "$(pwd)/waf/dependabot-waf.gemspec:$CODE_DIR/waf/dependabot-waf.gemspec" \
+  -v "$(pwd)/waf/helpers:$CODE_DIR/waf/helpers" \
+  -v "$(pwd)/waf/lib:$CODE_DIR/waf/lib" \
+  -v "$(pwd)/waf/spec:$CODE_DIR/waf/spec" \
   -v "$(pwd)/tmp:/$CODE_DIR/tmp" \
   -v "$(pwd)/updater/.rubocop.yml:$CODE_DIR/dependabot-updater/.rubocop.yml" \
   -v "$(pwd)/updater/bin:$CODE_DIR/dependabot-updater/bin" \

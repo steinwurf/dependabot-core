@@ -1,0 +1,12 @@
+{
+    "rng": {
+        "commit_id": "960f4f2d95ac14f10cc23a6c5540b071ab4c2c1d",
+        "resolver_info": "1.0.0",
+        "sha1": "bdc66374feba871dbe15583675582cc65dd01809"
+    },
+    "rng2": {
+        "commit_id":"d08aedb3bdc4e238a1ff05412eeb2970bc676afa",
+        "resolver_info":"1.1.0",
+        "sha1": "44d5635ecc1e757ca23fe6fb9d6d3872b4434bef"
+    }
+}

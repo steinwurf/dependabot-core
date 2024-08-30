@@ -75,7 +75,8 @@ module Dependabot
         "pip" => "pip",
         "pub" => "pub",
         "swift" => "swift",
-        "terraform" => "terraform"
+        "terraform" => "terraform",
+        "waf" => "waf"
       }.freeze, T::Hash[String, String])
 
       sig { params(cfg: T.nilable(T::Hash[Symbol, T.untyped])).returns(T::Array[IgnoreCondition]) }

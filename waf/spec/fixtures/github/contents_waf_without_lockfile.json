@@ -1,0 +1,50 @@
+[
+  {
+    "name": "resolve.json",
+    "path": "resolve.json",
+    "sha": "cb9ddc34d2c13ca51bd54ec7374d89cbad814d78",
+    "size": 213,
+    "url": "https://api.github.com/repos/runconduit/conduit/contents/resolve.json?ref=master",
+    "html_url": "https://github.com/runconduit/conduit/blob/master/resolve.json",
+    "git_url": "https://api.github.com/repos/runconduit/conduit/git/blobs/cb9ddc34d2c13ca51bd54ec7374d89cbad814d78",
+    "download_url": "https://raw.githubusercontent.com/runconduit/conduit/master/resolve.json",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/runconduit/conduit/contents/resolve.json?ref=master",
+      "git": "https://api.github.com/repos/runconduit/conduit/git/blobs/cb9ddc34d2c13ca51bd54ec7374d89cbad814d78",
+      "html": "https://github.com/runconduit/conduit/blob/master/resolve.json"
+    }
+  },
+  {
+    "name": "waf",
+    "path": "waf",
+    "sha": "cb9ddc34d2c13ca51bd54ec7374d89cbad814d78",
+    "size": 213,
+    "url": "https://api.github.com/repos/runconduit/conduit/contents/waf?ref=master",
+    "html_url": "https://github.com/runconduit/conduit/blob/master/waf",
+    "git_url": "https://api.github.com/repos/runconduit/conduit/git/blobs/cb9ddc34d2c13ca51bd54ec7374d89cbad814d78",
+    "download_url": "https://raw.githubusercontent.com/runconduit/conduit/master/waf",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/runconduit/conduit/contents/waf?ref=master",
+      "git": "https://api.github.com/repos/runconduit/conduit/git/blobs/cb9ddc34d2c13ca51bd54ec7374d89cbad814d78",
+      "html": "https://github.com/runconduit/conduit/blob/master/waf"
+    }
+  },
+  {
+    "name": "wscript",
+    "path": "wscript",
+    "sha": "cb9ddc34d2c13ca51bd54ec7374d89cbad814d78",
+    "size": 213,
+    "url": "https://api.github.com/repos/runconduit/conduit/contents/wscript?ref=master",
+    "html_url": "https://github.com/runconduit/conduit/blob/master/wscript",
+    "git_url": "https://api.github.com/repos/runconduit/conduit/git/blobs/cb9ddc34d2c13ca51bd54ec7374d89cbad814d78",
+    "download_url": "https://raw.githubusercontent.com/runconduit/conduit/master/wscript",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/runconduit/conduit/contents/wscript?ref=master",
+      "git": "https://api.github.com/repos/runconduit/conduit/git/blobs/cb9ddc34d2c13ca51bd54ec7374d89cbad814d78",
+      "html": "https://github.com/runconduit/conduit/blob/master/wscript"
+    }
+  }
+]

@@ -1,0 +1,157 @@
+[
+    {
+        "name": "waf-tools",
+        "resolver": "git",
+        "method": "semver",
+        "major": 5,
+        "source": "github.com/steinwurf/waf-tools.git"
+    },
+    {
+        "name": "asio",
+        "resolver": "git",
+        "method": "semver",
+        "major": 2,
+        "source": "github.com/steinwurf/asio.git"
+    },
+    {
+        "name": "srt",
+        "resolver": "git",
+        "method": "checkout",
+        "checkout": "6bef607",
+        "source": "github.com/steinwurf/srt.git"
+    },
+    {
+        "name": "polka",
+        "resolver": "git",
+        "method": "semver",
+        "major": 2,
+        "source": "github.com/steinwurf/polka.git"
+    },
+    {
+        "name": "bourne",
+        "resolver": "git",
+        "method": "semver",
+        "major": 10,
+        "source": "github.com/steinwurf/bourne.git"
+    },
+    {
+        "name": "endian",
+        "resolver": "git",
+        "method": "semver",
+        "major": 13,
+        "source": "github.com/steinwurf/endian.git"
+    },
+    {
+        "name": "rely",
+        "resolver": "git",
+        "method": "semver",
+        "major": 30,
+        "source": "github.com/steinwurf/rely.git"
+    },
+    {
+        "name": "platform",
+        "resolver": "git",
+        "method": "semver",
+        "major": 5,
+        "source": "github.com/steinwurf/platform.git"
+    },
+    {
+        "name": "poke",
+        "resolver": "git",
+        "method": "semver",
+        "major": 13,
+        "source": "github.com/steinwurf/poke.git"
+    },
+    {
+        "name": "CLI11",
+        "resolver": "git",
+        "method": "semver",
+        "major": 2,
+        "source": "github.com/steinwurf/CLI11.git"
+    },
+    {
+        "name": "tunnel",
+        "resolver": "git",
+        "method": "semver",
+        "major": 14,
+        "source": "github.com/steinwurf/tunnel.git"
+    },
+    {
+        "name": "protobuf",
+        "resolver": "git",
+        "method": "semver",
+        "major": 2,
+        "source": "github.com/steinwurf/protobuf.git"
+    },
+    {
+        "name": "ranbo",
+        "resolver": "git",
+        "method": "semver",
+        "major": 2,
+        "source": "github.com/steinwurf/ranbo.git"
+    },
+    {
+        "name": "kodo",
+        "resolver": "git",
+        "method": "semver",
+        "major": 30,
+        "source": "github.com/steinwurf/kodo.git"
+    },
+    {
+        "name": "kodok",
+        "resolver": "git",
+        "method": "semver",
+        "major": 22,
+        "source": "github.com/steinwurf/kodok.git"
+    },
+    {
+        "name": "rawt",
+        "resolver": "git",
+        "method": "semver",
+        "major": 3,
+        "source": "github.com/steinwurf/rawt.git"
+    },
+    {
+        "name": "tiny-process-lib",
+        "resolver": "git",
+        "method": "semver",
+        "major": 1,
+        "source": "github.com/steinwurf/tiny-process-lib.git"
+    },
+    {
+        "name": "aybabtu",
+        "resolver": "git",
+        "internal": true,
+        "method": "semver",
+        "major": 4,
+        "source": "github.com/steinwurf/aybabtu.git"
+    },
+    {
+        "name": "gtest",
+        "resolver": "git",
+        "internal": true,
+        "method": "semver",
+        "major": 5,
+        "source": "github.com/steinwurf/gtest.git"
+    },
+    {
+        "name": "protolock",
+        "resolver": "http",
+        "internal": true,
+        "extract": true,
+        "source": "https://github.com/nilslice/protolock/releases/download/v0.16.0/protolock.20220302T184110Z.linux-amd64.tgz"
+    },
+    {
+        "name": "expected",
+        "resolver": "git",
+        "method": "semver",
+        "major": 1,
+        "source": "github.com/steinwurf/expected.git"
+    },
+    {
+        "name": "raft",
+        "resolver": "git",
+        "method": "semver",
+        "major": 18,
+        "source": "github.com/steinwurf/raft.git"
+    }
