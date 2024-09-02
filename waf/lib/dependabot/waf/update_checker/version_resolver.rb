@@ -88,8 +88,8 @@ module Dependabot
         # Let waf handle the update
         def run_waf_resolve_command
           run_waf_command(
-            "python waf resolve -vvv --lock_versions --resolve_path=/resolved_dependencies",
-            fingerprint: "python waf resolve -vvv --lock_versions --resolve_path=/resolved_dependencies"
+            "python3 waf resolve -vvv --lock_versions --resolve_path=/resolved_dependencies",
+            fingerprint: "python3 waf resolve -vvv --lock_versions --resolve_path=/resolved_dependencies"
           )
         end
 

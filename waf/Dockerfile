@@ -5,6 +5,9 @@ USER root
 RUN mkdir -p /resolved_dependencies
 RUN chown dependabot /resolved_dependencies
 
+RUN apt update && \
+    apt install python3 -y
+
 USER dependabot
 
 COPY --chown=dependabot:dependabot waf $DEPENDABOT_HOME/waf
