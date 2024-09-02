@@ -95,9 +95,9 @@ module Dependabot
       end
 
       def group_from_declaration(declaration)
-        return "semver" if declaration["resolver"] == "git" && declaration["method"] == "semver"
-        return "checkout" if declaration["resolver"] == "git" && declaration["method"] == "checkout"
-        return "http" if declaration["resolver"] == "http"
+        return ["semver"] if declaration["resolver"] == "git" && declaration["method"] == "semver"
+        return ["checkout"] if declaration["resolver"] == "git" && declaration["method"] == "checkout"
+        return ["http"] if declaration["resolver"] == "http"
 
         ""
       end
