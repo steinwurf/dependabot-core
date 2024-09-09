@@ -51,24 +51,24 @@ jobs:
       fail-fast: false
       matrix:
         suite:
-          - { name: bundler, ecosystem: bundler }
-          - { name: cargo, ecosystem: cargo }
-          - { name: composer, ecosystem: composer }
-          - { name: docker, ecosystem: docker }
-          - { name: elm, ecosystem: elm }
-          - { name: git_submodules, ecosystem: gitsubmodule }
-          - { name: github_actions, ecosystem: github-actions }
-          - { name: go_modules, ecosystem: gomod }
-          - { name: gradle, ecosystem: gradle }
-          - { name: hex, ecosystem: mix }
-          - { name: maven, ecosystem: maven }
-          - { name: npm_and_yarn, ecosystem: npm }
-          - { name: nuget, ecosystem: nuget }
-          - { name: pub, ecosystem: pub }
-          - { name: python, ecosystem: pip }
-          - { name: swift, ecosystem: swift }
-          - { name: devcontainers, ecosystem: devcontainers }
-          - { name: terraform, ecosystem: terraform }
+          #- { name: bundler, ecosystem: bundler }
+          #- { name: cargo, ecosystem: cargo }
+          #- { name: composer, ecosystem: composer }
+          #- { name: docker, ecosystem: docker }
+          #- { name: elm, ecosystem: elm }
+          #- { name: git_submodules, ecosystem: gitsubmodule }
+          #- { name: github_actions, ecosystem: github-actions }
+          #- { name: go_modules, ecosystem: gomod }
+          #- { name: gradle, ecosystem: gradle }
+          #- { name: hex, ecosystem: mix }
+          #- { name: maven, ecosystem: maven }
+          #- { name: npm_and_yarn, ecosystem: npm }
+          #- { name: nuget, ecosystem: nuget }
+          #- { name: pub, ecosystem: pub }
+          #- { name: python, ecosystem: pip }
+          #- { name: swift, ecosystem: swift }
+          #- { name: devcontainers, ecosystem: devcontainers }
+          #- { name: terraform, ecosystem: terraform }
           - { name: waf, ecosystem: waf }
     permissions:
       contents: read
@@ -106,13 +106,13 @@ jobs:
 
       - name: Push branch image
         run: |
-          docker tag "ghcr.io/dependabot/dependabot-updater-${{ matrix.suite.ecosystem }}" "ghcr.io/dependabot/dependabot-updater-${{ matrix.suite.ecosystem }}:$DEPENDABOT_UPDATER_VERSION"
-          docker push "ghcr.io/dependabot/dependabot-updater-${{ matrix.suite.ecosystem }}:$DEPENDABOT_UPDATER_VERSION"
-          cosign sign --yes $(cosign triangulate --type=digest "ghcr.io/dependabot/dependabot-updater-${{ matrix.suite.ecosystem }}:$DEPENDABOT_UPDATER_VERSION")
+          docker tag "ghcr.io/steinwurf/dependabot-updater-${{ matrix.suite.ecosystem }}" "ghcr.io/steinwurf/dependabot-updater-${{ matrix.suite.ecosystem }}:$DEPENDABOT_UPDATER_VERSION"
+          docker push "ghcr.io/steinwurf/dependabot-updater-${{ matrix.suite.ecosystem }}:$DEPENDABOT_UPDATER_VERSION"
+          cosign sign --yes $(cosign triangulate --type=digest "ghcr.io/steinwurf/dependabot-updater-${{ matrix.suite.ecosystem }}:$DEPENDABOT_UPDATER_VERSION")
 
       - name: Set summary
         run: |
           echo "updater uploaded with tag \`$DEPENDABOT_UPDATER_VERSION\`" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-          echo "ghcr.io/dependabot/dependabot-updater-${{ matrix.suite.ecosystem }}:$DEPENDABOT_UPDATER_VERSION" >> $GITHUB_STEP_SUMMARY
+          echo "ghcr.io/steinwurf/dependabot-updater-${{ matrix.suite.ecosystem }}:$DEPENDABOT_UPDATER_VERSION" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
