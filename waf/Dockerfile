@@ -1,4 +1,4 @@
-FROM ghcr.io/dependabot/dependabot-updater-core
+FROM ghcr.io/steinwurf/dependabot-updater-core
 
 USER root
 

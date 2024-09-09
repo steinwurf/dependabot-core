@@ -11,7 +11,7 @@ jobs:
   push-updater-core-image:
     name: Push dependabot-updater-core image to GHCR
     runs-on: ubuntu-latest
-    if: github.repository == 'dependabot/dependabot-core'
+    if: github.repository == 'steinwurf/dependabot-core'
     permissions:
       contents: read
       id-token: write
