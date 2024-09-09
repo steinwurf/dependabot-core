@@ -2,7 +2,7 @@ FROM docker.io/library/ubuntu:22.04
 
 ARG TARGETARCH
 
-LABEL org.opencontainers.image.source="https://github.com/dependabot/dependabot-core"
+LABEL org.opencontainers.image.source="https://github.com/steinwurf/dependabot-core"
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
