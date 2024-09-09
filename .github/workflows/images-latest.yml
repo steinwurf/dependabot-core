@@ -1,10 +1,10 @@
 name: Latest images
 env:
-  UPDATER_IMAGE: "ghcr.io/dependabot/dependabot-updater-"
+  UPDATER_IMAGE: "ghcr.io/steinwurf/dependabot-updater-"
 on: # yamllint disable-line rule:truthy
   push:
     branches:
-      - main
+      - waf
     paths-ignore:
       - "common/lib/dependabot.rb"
 

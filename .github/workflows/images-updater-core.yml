@@ -1,10 +1,10 @@
 name: Updater-Core image
 env:
-  UPDATER_CORE_IMAGE: "ghcr.io/dependabot/dependabot-updater-core"
+  UPDATER_CORE_IMAGE: "ghcr.io/steinwurf/dependabot-updater-core"
 on: # yamllint disable-line rule:truthy
   push:
     branches:
-      - main
+      - waf
     tags:
       - v[0-9]+.[0-9]+.[0-9]+
 jobs:
