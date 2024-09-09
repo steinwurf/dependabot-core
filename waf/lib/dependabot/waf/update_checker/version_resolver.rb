@@ -47,11 +47,14 @@ module Dependabot
           SharedHelpers.in_a_temporary_directory(base_directory) do
             write_temporary_dependency_files
 
+
             SharedHelpers.with_git_configured(credentials: credentials) do
               run_waf_resolve_command
             end
 
             updated_version = fetch_version_from_new_lockfile
+            puts "updated_version: "
+            puts updated_version
 
             return if updated_version.nil?
             return updated_version if git_dependency?
@@ -88,8 +91,8 @@ module Dependabot
         # Let waf handle the update
         def run_waf_resolve_command
           run_waf_command(
-            "python3 waf resolve -vvv --lock_versions --resolve_path=/resolved_dependencies",
-            fingerprint: "python3 waf resolve -vvv --lock_versions --resolve_path=/resolved_dependencies"
+            "python3 waf resolve -vvv --lock_versions --resolve_path=/resolved_dependencies --git_protocol=https://",
+            fingerprint: "python3 waf resolve -vvv --lock_versions --resolve_path=/resolved_dependencies --git_protocol=https://"
           )
         end
 
@@ -130,7 +133,7 @@ module Dependabot
         def handle_waf_errors(error)
           # These seems like a briliant candidate for test in production :)
           puts error
-          nil
+          raise NotImplementedError
         end
 
         def prepared_manifest_files

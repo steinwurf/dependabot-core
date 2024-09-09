@@ -24,8 +24,8 @@ module Dependabot
             write_temporary_dependency_files
 
             SharedHelpers.with_git_configured(credentials: credentials) do
-              run_waf_command("python3 waf resolve -vvv --lock_versions --resolve_path=/resolved_dependencies",
-                              fingerprint: "python3 waf resolve -vvv --lock_versions --resolve_path=/resolved_dependencies")
+              run_waf_command("python3 waf resolve -vvv --lock_versions --resolve_path=/resolved_dependencies --git_protocol=https://",
+                              fingerprint: "python3 waf resolve -vvv --lock_versions --resolve_path=/resolved_dependencies --git_protocol=https://")
             end
 
             updated_lockfile = File.read("lock_version_resolve.json")
