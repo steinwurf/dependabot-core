@@ -119,8 +119,16 @@ module Dependabot
         def fetch_version_from_new_lockfile
           lockfile_content = File.read("lock_version_resolve.json")
           versions = JSON.parse(lockfile_content).fetch(dependency.name)
+          resolver_info = versions.fetch("resolver_info")
 
-          version_class.new(versions.fetch("resolver_info"))
+          return resolver_info if is_checkout_a_commit?(resolver_info)
+
+          version_class.new(resolver_info)
+        end
+
+        PATTERN = /\b[0-9a-f]{5,40}\b/
+        def is_checkout_a_commit?(checkout)
+          checkout.to_s.match?(PATTERN)
         end
 
         def better_specification_needed?(error)

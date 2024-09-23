@@ -84,14 +84,18 @@ module Dependabot
 
         return declaration["major"].to_s if declaration["method"] == "semver" && !declaration["major"].nil?
 
-        if declaration["method"] == "checkout" && declaration["checkout"] != "" && !declaration["checkout"].nil?
+        if declaration["method"] == "checkout" && declaration["checkout"] != "" && !declaration["checkout"].nil? && is_checkout_a_commit?(declaration["checkout"]) == false
           return declaration["checkout"]
         end
 
         return unless declaration["resolver"] != "http"
 
-        raise Dependabot::DependencyFileNotEvaluatable,
-              "No version where provided in the resolve.json file"
+        nil
+      end
+
+      PATTERN = /\b[0-9a-f]{5,40}\b/
+      def is_checkout_a_commit?(checkout)
+        checkout.to_s.match?(PATTERN)
       end
 
       def group_from_declaration(declaration)
@@ -103,12 +107,13 @@ module Dependabot
       end
 
       def git_source_details(declaration)
-        ref = declaration["major"].to_s + ".0.0" if declaration["major"]
+        ref_major = declaration["major"].to_s + ".0.0" if declaration["major"]
+        ref_checkout = declaration["checkout"].to_s
         {
           type: "git",
           url: "https://" + (declaration["source"] || declaration["sources"][0]), # Taking the first source is fine since multiple sources have never been used.
-          branch: "main", # Not used from my knowledge.
-          ref: (ref || declaration["checkout"]).to_s
+          branch: nil, # Must obtain the branch name from commit id. It is set to nil here to later add it to the source.
+          ref: ref_major || ref_checkout
         }
       end
 
@@ -166,6 +171,14 @@ module Dependabot
       sig { override.void }
       def check_required_files
         raise "No resolve.json" unless waf_resolve
+      end
+
+      def git_commit_checker(dep)
+        @git_commit_checker ||=
+          GitCommitChecker.new(
+            dependency: dep,
+            credentials: credentials
+          )
       end
     end
   end

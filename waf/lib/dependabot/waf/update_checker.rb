@@ -72,7 +72,7 @@ module Dependabot
       end
 
       def latest_resolvable_version_for_git_dependency
-        latest_resolvable_commit_with_unchanged_git_source unless git_commit_checker.pinned?
+        return latest_resolvable_commit_with_unchanged_git_source unless git_commit_checker.pinned?
 
         if git_commit_checker.pinned_ref_looks_like_version? && latest_git_tag_is_resolvable?
           new_tag = git_commit_checker.local_tag_for_latest_version
@@ -83,8 +83,10 @@ module Dependabot
       end
 
       def latest_git_version
+        puts dependency.to_h
+
         # If the dependency is not pinned, then the latest version is the latest commit for the specified branch.
-        git_commit_checker.head_commit_for_current_branch unless git_commit_checker.pinned?
+        return git_commit_checker.head_commit_for_current_branch unless git_commit_checker.pinned?
 
         # If the dependency is pinned to a tag,
         # then we should update that tag.
@@ -93,13 +95,18 @@ module Dependabot
           return latest_tag&.fetch(:version) || dependency.version
         end
 
+        if git_commit_checker.pinned_ref_looks_like_commit_sha?
+          latest_commit = git_commit_checker.head_commit_for_current_branch
+          return latest_tag&.fetch(:commit_sha) || dependency.version
+        end
+
         # If the dependency is pinned to a tag that doesn't look like a
         # version then there's nothing we can do.
         dependency.version
       end
 
       def latest_resolvable_commit_with_unchanged_git_source
-        fetch_latest_resolvable_version(unlock_requirement: false)
+        return fetch_latest_resolvable_version(unlock_requirement: false)
       rescue SharedHelpers::HelperSubprocessFailed => e
         return if e.message.include?("versions conflict")
 
