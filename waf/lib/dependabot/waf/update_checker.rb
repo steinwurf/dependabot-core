@@ -68,7 +68,24 @@ module Dependabot
       end
 
       def latest_version_for_git_dependency
-        latest_git_version
+        latest_version = latest_git_version
+
+        return latest_version unless dependency.requirements[0][:groups].include?("semver")
+
+        matched_version = latest_version.to_s.scan(/\d+/)
+
+        split_original = dependency.version.to_s.scan(/\d+/).length()
+
+        composed_version = ""
+
+        for i in 0..split_original - 1 do
+          if i != 0
+            composed_version = composed_version + "."
+          end
+          composed_version = composed_version + matched_version[i]
+        end
+
+        version_class.new(composed_version)
       end
 
       def latest_resolvable_version_for_git_dependency

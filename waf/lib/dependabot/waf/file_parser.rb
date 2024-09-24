@@ -119,6 +119,16 @@ module Dependabot
         }
       end
 
+      def version_from_files(name, requirement)
+        return version_from_lockfile(name) if lockfile
+
+        version_from_manifest(requirement)
+      end
+
+      def version_from_manifest(requirement)
+        requirement["checkout"] || requirement["major"].to_s
+      end
+
       def version_from_lockfile(name)
         return unless lockfile
 
@@ -136,7 +146,7 @@ module Dependabot
       def build_dependency(name, requirement, file)
         Dependency.new(
           name: name,
-          version: version_from_lockfile(name),
+          version: version_from_files(name, requirement),
           package_manager: "waf",
           requirements: [{
             requirement: requirement_from_declaration(requirement),
