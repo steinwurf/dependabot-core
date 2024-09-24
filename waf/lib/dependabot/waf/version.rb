@@ -13,9 +13,9 @@ module Dependabot
 
       attr_reader :build_info
 
-      VERSION_PATTERN = 'v?[0-9]+(?>\.[0-9a-zA-Z]+)*' \
-                        'v?(-[0-9A-Za-z-]+(\.[0-9a-zA-Z-]+)*)?' \
-                        'v?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?'
+      VERSION_PATTERN = '[0-9]+(?>\.[0-9a-zA-Z]+)*' \
+                        '(-[0-9A-Za-z-]+(\.[0-9a-zA-Z-]+)*)?' \
+                        '(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?'
       ANCHORED_VERSION_PATTERN = /\A\s*(#{VERSION_PATTERN})?\s*\z/
 
       def initialize(version)

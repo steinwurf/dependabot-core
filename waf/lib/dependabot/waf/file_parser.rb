@@ -8,6 +8,7 @@ require "dependabot/file_parsers/base/dependency_set"
 require "dependabot/errors"
 require "dependabot/file_parsers"
 require "dependabot/file_parsers/base"
+require "dependabot/waf/version"
 
 module Dependabot
   module Waf
@@ -126,7 +127,7 @@ module Dependabot
       end
 
       def version_from_manifest(requirement)
-        requirement["checkout"] || requirement["major"].to_s
+        (requirement["checkout"] || requirement["major"].to_s).match(Dependabot::Waf::Version::VERSION_PATTERN)[0]
       end
 
       def version_from_lockfile(name)
