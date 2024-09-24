@@ -75,7 +75,7 @@ module Dependabot
           scanned_content = content.match(declaration_regex(dep))
 
           # Using unamed indexes is a very bad idea.
-          puts scanned_content.named_captures
+
 
           if scanned_content.named_captures.fetch("resolver") == "git"
             if scanned_content.named_captures.fetch("method") == "semver"
@@ -101,7 +101,7 @@ module Dependabot
 \s*"method":\s*"(?<method>semver|checkout)",?\s*|
 \s*(?<major>"major":\s*\d+),?\s*|
 \s*"source":\s*"(?<source>[^"]+)",?\s*|
-\s*(?<checkout>"checkout":\s*"(?:[0-9a-f]+|\d+(?:\.\d+)*))",?\s*|
+\s*(?<checkout>"checkout":\s*"(?:[0-9a-f]+|\d+(?:\.\d+)*|.+))",?\s*|
 \s*"internal":\s*(?<internal>true|false),?\s*|
 \s*"optional":\s*(?<optional>true|false),?\s*|
 \s*"recurse":\s*(?<recurse>true|false),?\s*|
