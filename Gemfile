@@ -26,6 +26,7 @@ gem "dependabot-silent", path: "silent"
 gem "dependabot-swift", path: "swift"
 gem "dependabot-terraform", path: "terraform"
 gem "dependabot-uv", path: "uv"
+gem "dependabot-waf", path: "waf"
 
 # Sorbet
 gem "sorbet", "0.5.11630", group: :development

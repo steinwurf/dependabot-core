@@ -1,0 +1,19 @@
+{
+    "type": "file",
+    "encoding": "base64",
+    "name": "waf",
+    "path": "waf",
+    "size": 48,
+    "content": "c29tZXRoaW5nIGJlZm9yZQpWRVJTSU9OPSIxMC4xLjIiCnNvbWV0aGluZyBhZnRlcg==",
+    "sha": "cb9ddc34d2c13ca51bd54ec7374d89cbad814d78",
+    "url": "https://api.github.com/repos/runconduit/conduit/contents/waf?ref=master",
+    "git_url": "https://api.github.com/repos/runconduit/conduit/git/blobs/cb9ddc34d2c13ca51bd54ec7374d89cbad814d78",
+    "html_url": "https://github.com/runconduit/conduit/blob/master/waf",
+    "download_url": "https://raw.githubusercontent.com/runconduit/conduit/master/waf",
+    "_links": {
+      "self": "https://api.github.com/repos/runconduit/conduit/contents/waf?ref=master",
+      "git": "https://api.github.com/repos/runconduit/conduit/git/blobs/cb9ddc34d2c13ca51bd54ec7374d89cbad814d78",
+      "html": "https://github.com/runconduit/conduit/blob/master/waf"
+    }
+  }
+  

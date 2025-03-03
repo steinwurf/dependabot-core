@@ -1,0 +1,18 @@
+[
+    {
+        "name": "waf-tools",
+        "recurse": false,
+        "resolver": "git",
+        "method": "semver",
+        "major": 5,
+        "source": "github.com/steinwurf/waf-tools.git"
+    },
+    {
+        "name": "tunnel",
+        "recurse": false,
+        "resolver": "git",
+        "method": "semver",
+        "major": 13,
+        "source": "github.com/steinwurf/tunnel.git"
+    }
+]

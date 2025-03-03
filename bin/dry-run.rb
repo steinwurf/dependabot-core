@@ -75,6 +75,7 @@ $LOAD_PATH << "./pub/lib"
 $LOAD_PATH << "./swift/lib"
 $LOAD_PATH << "./terraform/lib"
 $LOAD_PATH << "./uv/lib"
+$LOAD_PATH << "./waf/lib"
 
 updater_image_gemfile = File.expand_path("../dependabot-updater/Gemfile", __dir__)
 updater_repo_gemfile = File.expand_path("../updater/Gemfile", __dir__)
@@ -124,6 +125,7 @@ require "dependabot/pub"
 require "dependabot/swift"
 require "dependabot/terraform"
 require "dependabot/uv"
+require "dependabot/waf"
 
 # GitHub credentials with write permission to the repo you want to update
 # (so that you can create a new branch, commit and pull request).

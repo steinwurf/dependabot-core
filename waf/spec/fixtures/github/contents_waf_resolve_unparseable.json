@@ -1,0 +1,16 @@
+type = "file"
+encoding = "base64"
+name = "resolve.json"
+path = "resolve.json"
+size = 273
+content = "W3sibmFtZSI6InJuZyIsInJlY3Vyc2UiOmZhbHNlLCJyZXNvbHZlciI6ImdpdCIsIm1ldGhvZCI6ImNoZWNrb3V0IiwiY2hlY2tvdXQiOiIxLjAuMSIsInNvdXJjZSI6Imh0dHBzOi8vZ2l0bGFiLmNvbS9zb21ld2hlcmUvcm5nLmdpdCJ9LHsibmFtZSI6InJuZzIiLCJyZWN1cnNlIjpmYWxzZSwicmVzb2x2ZXIiOiJnaXQiLCJtZXRob2QiOiJjaGVja291dCIsImNoZWNrb3V0IjoiMS4yLjAiLCJzb3VyY2UiOiJodHRwczovL2dpdGxhYi5jb20vc29tZXdoZXJlL3JuZzIuZ2l0In1d"
+sha = "cb9ddc34d2c13ca51bd54ec7374d89cbad814d78"
+url = "https://api.github.com/repos/runconduit/conduit/contents/resolve.json?ref=master"
+git_url = "https://api.github.com/repos/runconduit/conduit/git/blobs/cb9ddc34d2c13ca51bd54ec7374d89cbad814d78"
+html_url = "https://github.com/runconduit/conduit/blob/master/resolve.json"
+download_url = "https://raw.githubusercontent.com/runconduit/conduit/master/resolve.json"
+
+[_links]
+self = "https://api.github.com/repos/runconduit/conduit/contents/resolve.json?ref=master"
+git = "https://api.github.com/repos/runconduit/conduit/git/blobs/cb9ddc34d2c13ca51bd54ec7374d89cbad814d78"
+html = "https://github.com/runconduit/conduit/blob/master/resolve.json"

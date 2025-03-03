@@ -1,0 +1,10 @@
+[
+    {
+        "name": "tunnel",
+        "recurse": false,
+        "resolver": "git",
+        "method": "semver",
+        "major": 13,
+        "source": "github.com/steinwurf/tunnel.git"
+    }
+]

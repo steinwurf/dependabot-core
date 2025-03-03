@@ -27,4 +27,5 @@ dependabot \
   -v "$(pwd)"/terraform:/home/dependabot/terraform \
   -v "$(pwd)"/bun:/home/dependabot/bun \
   -v "$(pwd)"/uv:/home/dependabot/uv \
+  -v "$(pwd)"/waf:/home/dependabot/waf \
   "$@"

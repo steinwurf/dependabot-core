@@ -27,6 +27,7 @@ Sentry.init do |config|
     dependabot-updater/lib|
     common|
     python|
+    waf|
     terraform|
     elm|
     docker|
@@ -60,6 +61,7 @@ Dependabot::Sorbet::Runtime.silently_report_errors!
 
 # Ecosystems
 require "dependabot/python"
+require "dependabot/waf"
 require "dependabot/terraform"
 require "dependabot/elm"
 require "dependabot/docker"

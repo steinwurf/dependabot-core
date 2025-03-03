@@ -1,0 +1,19 @@
+{
+    "type": "file",
+    "encoding": "base64",
+    "name": "lock_version_resolve.json",
+    "path": "lock_version_resolve.json",
+    "size": 357,
+    "content": "ewogICAgInJuZyI6IHsKICAgICAgICAiY29tbWl0X2lkIjogIjk2MGY0ZjJkOTVhYzE0ZjEwY2MyM2E2YzU1NDBiMDcxYWI0YzJjMWQiLAogICAgICAgICJyZXNvbHZlcl9pbmZvIjogIjEuMC4wIiwKICAgICAgICAic2hhMSI6ICJiZGM2NjM3NGZlYmE4NzFkYmUxNTU4MzY3NTU4MmNjNjVkZDAxODA5IgogICAgfSwKICAgICJybmcyIjogewogICAgICAgICJjb21taXRfaWQiOiJkMDhhZWRiM2JkYzRlMjM4YTFmZjA1NDEyZWViMjk3MGJjNjc2YWZhIiwKICAgICAgICAicmVzb2x2ZXJfaW5mbyI6IjEuMS4wIiwKICAgICAgICAic2hhMSI6ICI0NGQ1NjM1ZWNjMWU3NTdjYTIzZmU2ZmI5ZDZkMzg3MmI0NDM0YmVmIgogICAgfQp9",
+    "sha": "cb9ddc34d2c13ca51bd54ec7374d89cbad814d78",
+    "url": "https://api.github.com/repos/runconduit/conduit/contents/lock_version_resolve.json?ref=master",
+    "git_url": "https://api.github.com/repos/runconduit/conduit/git/blobs/cb9ddc34d2c13ca51bd54ec7374d89cbad814d78",
+    "html_url": "https://github.com/runconduit/conduit/blob/master/lock_version_resolve.json",
+    "download_url": "https://raw.githubusercontent.com/runconduit/conduit/master/lock_version_resolve.json",
+    "_links": {
+      "self": "https://api.github.com/repos/runconduit/conduit/contents/lock_version_resolve.json?ref=master",
+      "git": "https://api.github.com/repos/runconduit/conduit/git/blobs/cb9ddc34d2c13ca51bd54ec7374d89cbad814d78",
+      "html": "https://github.com/runconduit/conduit/blob/master/lock_version_resolve.json"
+    }
+  }
+  

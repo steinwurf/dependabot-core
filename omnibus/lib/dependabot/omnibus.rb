@@ -1,6 +1,7 @@
 # typed: strong
 # frozen_string_literal: true
 
+require "dependabot/waf"
 require "dependabot/python"
 require "dependabot/terraform"
 require "dependabot/elm"
