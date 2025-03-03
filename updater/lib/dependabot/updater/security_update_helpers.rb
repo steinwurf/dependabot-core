@@ -63,8 +63,8 @@ module Dependabot
         )
       end
 
-      sig { params(checker: Dependabot::UpdateCheckers::Base).void }
-      def record_security_update_not_possible_error(checker)
+      sig { params(checker: Dependabot::UpdateCheckers::Base, error_type: String).void }
+      def record_security_update_not_possible_error(checker, error_type = "security_update_not_possible")
         latest_allowed_version =
           (checker.lowest_resolvable_security_fix_version ||
            checker.dependency.version)&.to_s
@@ -80,7 +80,7 @@ module Dependabot
         )
 
         service.record_update_job_error(
-          error_type: "security_update_not_possible",
+          error_type: error_type,
           error_details: {
             "dependency-name": checker.dependency.name,
             "latest-resolvable-version": latest_allowed_version,
@@ -179,6 +179,53 @@ module Dependabot
           "The latest possible version of #{checker.dependency.name} that can " \
             "be installed is #{latest_allowed_version}"
         end
+      end
+    end
+
+    module PullRequestHelpers
+      extend T::Sig
+      extend T::Helpers
+
+      sig { returns(Dependabot::Service) }
+      attr_reader :service
+
+      abstract!
+
+      sig { params(notices: T.nilable(T::Array[Dependabot::Notice])).void }
+      def record_warning_notices(notices)
+        return if !notices || notices.empty?
+
+        # Find unique warning notices which are going to be shown on insight page.
+        warn_notices = unique_warn_notices(notices)
+
+        warn_notices.each do |notice|
+          # If alert is enabled, sending the deprecation notice to the service for showing on the UI insight page
+          send_alert_notice(notice) if notice.show_alert
+        end
+        rescue StandardError => e
+          Dependabot.logger.error(
+            "Failed to send notice warning: #{e.message}"
+          )
+      end
+
+      private
+
+      # Resurns unique warning notices which are going to be shown on insight page.
+      sig { params(notices: T::Array[Dependabot::Notice]).returns(T::Array[Dependabot::Notice]) }
+      def unique_warn_notices(notices)
+        notices
+          .select { |notice| notice.mode == Dependabot::Notice::NoticeMode::WARN }
+          .uniq { |notice| [notice.type, notice.package_manager_name] }
+      end
+
+      sig { params(notice: Dependabot::Notice).void }
+      def send_alert_notice(notice)
+        # Sending the notice to the service for showing on the dependabot insight page
+        service.record_update_job_warning(
+          warn_type: notice.type,
+          warn_title: notice.title,
+          warn_description: notice.description
+        )
       end
     end
   end

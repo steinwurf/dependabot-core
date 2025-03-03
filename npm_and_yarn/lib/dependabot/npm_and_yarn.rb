@@ -90,6 +90,8 @@ module Dependabot
     PACKAGE_NOT_FOUND_PACKAGE_NAME_CAPTURE_SPLIT_REGEX = /(?<=\w)\@/
 
     YARN_PACKAGE_NOT_FOUND_CODE = /npm package "(?<dep>.*)" does not exist under owner "(?<regis>.*)"/
+    YARN_PACKAGE_NOT_FOUND_CODE_1 = /Couldn't find package "[^@].*(?<dep>.*)" on the "(?<regis>.*)" registry./
+    YARN_PACKAGE_NOT_FOUND_CODE_2 = /Couldn't find package "[^@].*(?<dep>.*)" required by "(?<pkg>.*)" on the "(?<regis>.*)" registry./ # rubocop:disable Layout/LineLength
 
     YN0035 = T.let({
       PACKAGE_NOT_FOUND: %r{(?<package_req>@[\w-]+\/[\w-]+@\S+): Package not found},
@@ -144,6 +146,10 @@ module Dependabot
     # if not package found with specified version
     YARN_PACKAGE_NOT_FOUND = /MessageError: Couldn't find any versions for "(?<pkg>.*?)" that matches "(?<ver>.*?)"/
 
+    YN0001_DEPS_RESOLUTION_FAILED = T.let({
+      DEPS_INCORRECT_MET: /peer dependencies are incorrectly met/
+    }.freeze, T::Hash[String, Regexp])
+
     YN0001_FILE_NOT_RESOLVED_CODES = T.let({
       FIND_PACKAGE_LOCATION: /YN0001:(.*?)UsageError: Couldn't find the (?<pkg>.*) state file/,
       NO_CANDIDATE_FOUND: /YN0001:(.*?)Error: (?<pkg>.*): No candidates found/,
@@ -157,6 +163,20 @@ module Dependabot
     YN0001_AUTH_ERROR_CODES = T.let({
       AUTH_ERROR: /YN0001:*.*Fatal Error: could not read Username for '(?<url>.*)': terminal prompts disabled/
     }.freeze, T::Hash[String, Regexp])
+
+    YN0001_REQ_NOT_FOUND_CODES = T.let({
+      REQUIREMENT_NOT_SATISFIED: /provides (?<dep>.*)(.*?)with version (?<ver>.*), which doesn't satisfy what (?<pkg>.*) requests/, # rubocop:disable Layout/LineLength
+      REQUIREMENT_NOT_PROVIDED: /(?<dep>.*)(.*?)doesn't provide (?<pkg>.*)(.*?), requested by (?<parent>.*)/
+    }.freeze, T::Hash[String, Regexp])
+
+    YN0001_INVALID_TYPE_ERRORS = T.let({
+      INVALID_URL: /TypeError: (?<dep>.*): Invalid URL/
+    }.freeze, T::Hash[String, Regexp])
+
+    YN0086_DEPS_RESOLUTION_FAILED = /peer dependencies are incorrectly met/
+
+    # registry returns malformed response
+    REGISTRY_NOT_REACHABLE = /Received malformed response from registry for "(?<ver>.*)". The registry may be down./
 
     class Utils
       extend T::Sig
@@ -210,6 +230,26 @@ module Dependabot
               return Dependabot::PrivateSourceAuthenticationFailure.new(url)
             end
           end
+
+          YN0001_REQ_NOT_FOUND_CODES.each do |(_yn0001_key, yn0001_regex)|
+            if (msg = message.match(yn0001_regex))
+              return Dependabot::DependencyFileNotResolvable.new(msg)
+            end
+          end
+
+          YN0001_DEPS_RESOLUTION_FAILED.each do |(_yn0001_key, yn0001_regex)|
+            if (msg = message.match(yn0001_regex))
+              return Dependabot::DependencyFileNotResolvable.new(msg)
+            end
+          end
+
+          YN0001_INVALID_TYPE_ERRORS.each do |(_yn0001_key, yn0001_regex)|
+            if (msg = message.match(yn0001_regex))
+
+              return Dependabot::DependencyFileNotResolvable.new(msg)
+            end
+          end
+
           Dependabot::DependabotError.new(message)
         }
       },
@@ -334,6 +374,13 @@ module Dependabot
             Dependabot::DependencyNotFound.new(message)
           end
         }
+      },
+      "YN0086" => {
+        message: "deps resolution failed",
+        handler: lambda { |message, _error, _params|
+          msg = message.match(YN0086_DEPS_RESOLUTION_FAILED)
+          Dependabot::DependencyFileNotResolvable.new(msg || message)
+        }
       }
     }.freeze, T::Hash[String, {
       message: T.any(String, NilClass),
@@ -345,7 +392,7 @@ module Dependabot
       {
         patterns: [INVALID_NAME_IN_PACKAGE_JSON],
         handler: lambda { |message, _error, _params|
-          Dependabot::DependencyFileNotParseable.new(message)
+          Dependabot::DependencyFileNotResolvable.new(message)
         },
         in_usage: false,
         matchfn: nil
@@ -529,9 +576,10 @@ module Dependabot
         matchfn: nil
       },
       {
-        patterns: [YARN_PACKAGE_NOT_FOUND_CODE],
+        patterns: [YARN_PACKAGE_NOT_FOUND_CODE, YARN_PACKAGE_NOT_FOUND_CODE_1, YARN_PACKAGE_NOT_FOUND_CODE_2],
         handler: lambda { |message, _error, _params|
-          msg = message.match(YARN_PACKAGE_NOT_FOUND_CODE)
+          msg = message.match(YARN_PACKAGE_NOT_FOUND_CODE) || message.match(YARN_PACKAGE_NOT_FOUND_CODE_1) ||
+          message.match(YARN_PACKAGE_NOT_FOUND_CODE_2)
 
           Dependabot::DependencyFileNotResolvable.new(msg)
         },
@@ -561,6 +609,15 @@ module Dependabot
         patterns: [INTERNAL_SERVER_ERROR],
         handler: lambda { |message, _error, _params|
           msg = message.match(INTERNAL_SERVER_ERROR)
+          Dependabot::DependencyFileNotResolvable.new(msg)
+        },
+        in_usage: false,
+        matchfn: nil
+      },
+      {
+        patterns: [REGISTRY_NOT_REACHABLE],
+        handler: lambda { |message, _error, _params|
+          msg = message.match(REGISTRY_NOT_REACHABLE)
           Dependabot::DependencyFileNotResolvable.new(msg)
         },
         in_usage: false,

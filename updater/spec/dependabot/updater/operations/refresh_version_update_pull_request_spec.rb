@@ -11,27 +11,10 @@ require "dependabot/service"
 require "dependabot/updater/error_handler"
 require "dependabot/updater/operations/refresh_version_update_pull_request"
 require "dependabot/dependency_change_builder"
-require "dependabot/package_manager"
+require "dependabot/ecosystem"
 require "dependabot/notices"
 
 require "dependabot/bundler"
-
-# Stub PackageManagerBase
-class StubPackageManager < Dependabot::PackageManagerBase
-  def initialize(name:, version:, deprecated_versions: [], unsupported_versions: [], supported_versions: [])
-    @name = name
-    @version = version
-    @deprecated_versions = deprecated_versions
-    @unsupported_versions = unsupported_versions
-    @supported_versions = supported_versions
-  end
-
-  attr_reader :name
-  attr_reader :version
-  attr_reader :deprecated_versions
-  attr_reader :unsupported_versions
-  attr_reader :supported_versions
-end
 
 RSpec.describe Dependabot::Updater::Operations::RefreshVersionUpdatePullRequest do
   include DependencyFileHelpers
@@ -49,7 +32,13 @@ RSpec.describe Dependabot::Updater::Operations::RefreshVersionUpdatePullRequest 
   end
 
   let(:mock_service) do
-    instance_double(Dependabot::Service, create_pull_request: nil, update_pull_request: nil, close_pull_request: nil)
+    instance_double(
+      Dependabot::Service,
+      create_pull_request: nil,
+      update_pull_request: nil,
+      close_pull_request: nil,
+      record_ecosystem_meta: nil
+    )
   end
   let(:mock_error_handler) { instance_double(Dependabot::Updater::ErrorHandler) }
 
@@ -71,8 +60,15 @@ RSpec.describe Dependabot::Updater::Operations::RefreshVersionUpdatePullRequest 
     )
   end
 
+  let(:ecosystem) do
+    Dependabot::Ecosystem.new(
+      name: "bundler",
+      package_manager: package_manager
+    )
+  end
+
   let(:package_manager) do
-    StubPackageManager.new(
+    DummyPkgHelpers::StubPackageManager.new(
       name: "bundler",
       version: package_manager_version,
       deprecated_versions: deprecated_versions,
@@ -143,13 +139,16 @@ RSpec.describe Dependabot::Updater::Operations::RefreshVersionUpdatePullRequest 
   end
 
   before do
-    allow(Dependabot::Experiments).to receive(:enabled?).with(:add_deprecation_warn_to_pr_message).and_return(true)
+    allow(Dependabot::Experiments).to receive(:enabled?).with(:lead_security_dependency).and_return(false)
+    allow(Dependabot::Experiments).to receive(:enabled?)
+      .with(:enable_shared_helpers_command_timeout)
+      .and_return(true)
 
     allow(Dependabot::UpdateCheckers).to receive(:for_package_manager).and_return(stub_update_checker_class)
     allow(Dependabot::DependencyChangeBuilder)
       .to receive(:create_from)
       .and_return(stub_dependency_change)
-    allow(dependency_snapshot).to receive(:package_manager).and_return(package_manager)
+    allow(dependency_snapshot).to receive(:ecosystem).and_return(ecosystem)
   end
 
   after do

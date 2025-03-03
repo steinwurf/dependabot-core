@@ -12,6 +12,7 @@ module Dependabot
     module Operations
       class UpdateAllVersions
         extend T::Sig
+        include PullRequestHelpers
 
         sig { params(_job: Dependabot::Job).returns(T::Boolean) }
         def self.applies_to?(_job:)
@@ -92,8 +93,10 @@ module Dependabot
         def check_and_create_pr_with_error_handling(dependency)
           check_and_create_pull_request(dependency)
         rescue URI::InvalidURIError => e
-          error_handler.handle_dependency_error(error: Dependabot::DependencyFileNotResolvable.new(e.message),
-                                                dependency: dependency)
+          error_handler.handle_dependency_error(
+            error: Dependabot::DependencyFileNotResolvable.new(e.message),
+            dependency: dependency
+          )
         rescue Dependabot::InconsistentRegistryResponse => e
           error_handler.log_dependency_error(
             dependency: dependency,
@@ -103,6 +106,8 @@ module Dependabot
           )
         rescue StandardError => e
           process_dependency_error(e, dependency)
+        ensure
+          service.record_ecosystem_meta(dependency_snapshot.ecosystem)
         end
 
         # rubocop:disable Metrics/AbcSize
@@ -167,12 +172,17 @@ module Dependabot
             dependency_files: dependency_snapshot.dependency_files,
             updated_dependencies: updated_deps,
             change_source: checker.dependency,
+            # Sending notices to the pr message builder to be used in the PR message if show_in_pr is true
             notices: @notices
           )
 
           if dependency_change.updated_dependency_files.empty?
             raise "UpdateChecker found viable dependencies to be updated, but FileUpdater failed to update any files"
           end
+
+          # Send warning alerts to the API if any warning notices are present.
+          # Note that only notices with notice.show_alert set to true will be sent.
+          record_warning_notices(notices) if notices.any?
 
           create_pull_request(dependency_change)
         end

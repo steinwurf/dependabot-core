@@ -2,12 +2,15 @@
 
 source "https://rubygems.org"
 
+gem "dependabot-bun", path: "bun"
 gem "dependabot-bundler", path: "bundler"
 gem "dependabot-cargo", path: "cargo"
 gem "dependabot-common", path: "common"
 gem "dependabot-composer", path: "composer"
 gem "dependabot-devcontainers", path: "devcontainers"
 gem "dependabot-docker", path: "docker"
+gem "dependabot-docker_compose", path: "docker_compose"
+gem "dependabot-dotnet_sdk", path: "dotnet_sdk"
 gem "dependabot-elm", path: "elm"
 gem "dependabot-github_actions", path: "github_actions"
 gem "dependabot-git_submodules", path: "git_submodules"
@@ -22,11 +25,14 @@ gem "dependabot-python", path: "python"
 gem "dependabot-silent", path: "silent"
 gem "dependabot-swift", path: "swift"
 gem "dependabot-terraform", path: "terraform"
+gem "dependabot-uv", path: "uv"
 gem "dependabot-waf", path: "waf"
 
 # Sorbet
-gem "sorbet", "0.5.11370", group: :development
-gem "tapioca", "0.13.3", require: false, group: :development
+gem "sorbet", "0.5.11630", group: :development
+gem "tapioca", "0.16.6", require: false, group: :development
+
+gem "zeitwerk", "~> 2.7"
 
 common_gemspec = File.expand_path("common/dependabot-common.gemspec", __dir__)
 
@@ -42,6 +48,7 @@ deps_shared_with_common = %w(
   rubocop-sorbet
   simplecov
   stackprof
+  strscan
   turbo_tests
   vcr
   webmock

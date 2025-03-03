@@ -13,6 +13,7 @@ module Dependabot
       class CreateSecurityUpdatePullRequest
         extend T::Sig
         include SecurityUpdateHelpers
+        include PullRequestHelpers
 
         sig { params(job: Job).returns(T::Boolean) }
         def self.applies_to?(job:)
@@ -99,6 +100,8 @@ module Dependabot
           )
         rescue StandardError => e
           error_handler.handle_dependency_error(error: e, dependency: dependency)
+        ensure
+          service.record_ecosystem_meta(dependency_snapshot.ecosystem)
         end
 
         # rubocop:disable Metrics/AbcSize
@@ -155,6 +158,12 @@ module Dependabot
           #   https://github.com/github/dependabot-api/issues/905
           return record_security_update_not_possible_error(checker) if updated_deps.none? { |d| job.security_fix?(d) }
 
+          if checker.conflicting_dependencies.any? do |dep|
+            T.must(dep["explanation"]).include?("via a transitive dependency")
+          end
+            return record_security_update_not_possible_error(checker, "transitive_update_not_possible")
+          end
+
           if (existing_pr = existing_pull_request(updated_deps))
             # Create a update job error to prevent dependabot-api from creating a
             # update_not_possible error, this is likely caused by a update job retry
@@ -162,16 +171,8 @@ module Dependabot
             # request)
             record_pull_request_exists_for_security_update(existing_pr)
 
-            deps = existing_pr.dependencies.map do |dep|
-              if dep.removed?
-                "#{dep.name}@removed"
-              else
-                "#{dep.name}@#{dep.version}"
-              end
-            end
-
             return Dependabot.logger.info(
-              "Pull request already exists for #{deps.join(', ')}"
+              pr_already_exists_message(existing_pr)
             )
           end
 
@@ -180,8 +181,13 @@ module Dependabot
             dependency_files: dependency_snapshot.dependency_files,
             updated_dependencies: updated_deps,
             change_source: checker.dependency,
+            # Sending notices to the pr message builder to be used in the PR message if show_in_pr is true
             notices: @notices
           )
+
+          # Send warning alerts to the API if any warning notices are present.
+          # Note that only notices with notice.show_alert set to true will be sent.
+          record_warning_notices(notices) if notices.any?
 
           create_pull_request(dependency_change)
         rescue Dependabot::AllVersionsIgnored
@@ -189,6 +195,20 @@ module Dependabot
           # Report this error to the backend to create an update job error
           raise
         end
+
+        sig { params(existing_pr: PullRequest).returns(String) }
+        def pr_already_exists_message(existing_pr)
+          deps = existing_pr.dependencies.map do |dep|
+            if dep.removed?
+              "#{dep.name}@removed"
+            else
+              "#{dep.name}@#{dep.version}"
+            end
+          end
+
+          "Pull request already exists for #{deps.join(', ')}"
+        end
+
         # rubocop:enable Metrics/MethodLength
         # rubocop:enable Metrics/AbcSize
         # rubocop:enable Metrics/PerceivedComplexity

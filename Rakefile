@@ -34,6 +34,10 @@ GEMSPECS = %w(
   silent/dependabot-silent.gemspec
   swift/dependabot-swift.gemspec
   devcontainers/dependabot-devcontainers.gemspec
+  dotnet_sdk/dependabot-dotnet_sdk.gemspec
+  bun/dependabot-bun.gemspec
+  docker_compose/dependabot-docker_compose.gemspec
+  uv/dependabot-uv.gemspec
   waf/dependabot-waf.gemspec
 ).freeze
 

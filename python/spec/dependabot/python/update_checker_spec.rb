@@ -225,18 +225,18 @@ RSpec.describe Dependabot::Python::UpdateChecker do
         it { is_expected.to eq(Gem::Version.new("3.2.4")) }
 
         context "when the version is set to the oldest version of python supported by Dependabot" do
-          let(:python_version_content) { "3.8.0\n" }
+          let(:python_version_content) { "3.9.0\n" }
 
           it { is_expected.to eq(Gem::Version.new("3.2.4")) }
         end
 
         context "when the version is set to a python version no longer supported by Dependabot" do
-          let(:python_version_content) { "3.7.0\n" }
+          let(:python_version_content) { "3.8.0\n" }
 
           it "raises a helpful error" do
             expect { latest_resolvable_version }.to raise_error(Dependabot::ToolVersionNotSupported) do |err|
               expect(err.message).to start_with(
-                "Dependabot detected the following Python requirement for your project: '3.7.0'."
+                "Dependabot detected the following Python requirement for your project: '3.8.0'."
               )
             end
           end
@@ -686,6 +686,63 @@ RSpec.describe Dependabot::Python::UpdateChecker do
     context "when there is a pyproject.toml file with standard python dependencies" do
       let(:dependency_files) { [pyproject] }
       let(:pyproject_fixture_name) { "standard_python_tilde_version.toml" }
+
+      context "when updating a dependency inside" do
+        let(:dependency) do
+          Dependabot::Dependency.new(
+            name: "requests",
+            version: "1.2.3",
+            requirements: [{
+              file: "pyproject.toml",
+              requirement: "~=1.0.0",
+              groups: [],
+              source: nil
+            }],
+            package_manager: "pip"
+          )
+        end
+
+        let(:pypi_url) { "https://pypi.org/simple/requests/" }
+        let(:pypi_response) do
+          fixture("pypi", "pypi_simple_response_requests.html")
+        end
+
+        context "when dealing with a library" do
+          before do
+            stub_request(:get, "https://pypi.org/pypi/pendulum/json/")
+              .to_return(
+                status: 200,
+                body: fixture("pypi", "pypi_response_pendulum.json")
+              )
+          end
+
+          its([:requirement]) { is_expected.to eq(">=1.0,<2.20") }
+        end
+
+        context "when dealing with a non-library" do
+          before do
+            stub_request(:get, "https://pypi.org/pypi/pendulum/json/")
+              .to_return(status: 404)
+          end
+
+          its([:requirement]) { is_expected.to eq("~=2.19.1") }
+        end
+      end
+
+      context "when updating a dependency in an additional requirements file" do
+        let(:dependency_files) { super().append(requirements_file) }
+
+        let(:dependency) { requirements_dependency }
+
+        it "does not get affected by whether it's a library or not and updates using the :increase strategy" do
+          expect(first_updated_requirements[:requirement]).to eq("==2.6.0")
+        end
+      end
+    end
+
+    context "when there is a pyproject.toml file with build system require dependencies" do
+      let(:dependency_files) { [pyproject] }
+      let(:pyproject_fixture_name) { "table_build_system_requires.toml" }
 
       context "when updating a dependency inside" do
         let(:dependency) do

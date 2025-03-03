@@ -32,10 +32,13 @@
 # - elm
 # - submodules
 # - docker
+# - docker_compose
 # - terraform
 # - pub
 # - swift
 # - devcontainers
+# - dotnet_sdk
+# - bun
 
 # rubocop:disable Style/GlobalVars
 
@@ -49,12 +52,15 @@ unless Etc.getpwuid(Process.uid).name == "dependabot" || ENV["ALLOW_DRY_RUN_STAN
   exit 1
 end
 
+$LOAD_PATH << "./bun/lib"
 $LOAD_PATH << "./bundler/lib"
 $LOAD_PATH << "./cargo/lib"
 $LOAD_PATH << "./common/lib"
 $LOAD_PATH << "./composer/lib"
 $LOAD_PATH << "./devcontainers/lib"
 $LOAD_PATH << "./docker/lib"
+$LOAD_PATH << "./docker_compose/lib"
+$LOAD_PATH << "./dotnet_sdk/lib"
 $LOAD_PATH << "./elm/lib"
 $LOAD_PATH << "./git_submodules/lib"
 $LOAD_PATH << "./github_actions/lib"
@@ -68,6 +74,7 @@ $LOAD_PATH << "./python/lib"
 $LOAD_PATH << "./pub/lib"
 $LOAD_PATH << "./swift/lib"
 $LOAD_PATH << "./terraform/lib"
+$LOAD_PATH << "./uv/lib"
 $LOAD_PATH << "./waf/lib"
 
 updater_image_gemfile = File.expand_path("../dependabot-updater/Gemfile", __dir__)
@@ -96,11 +103,14 @@ require "dependabot/pull_request_creator"
 require "dependabot/config/file_fetcher"
 require "dependabot/simple_instrumentor"
 
+require "dependabot/bun"
 require "dependabot/bundler"
 require "dependabot/cargo"
 require "dependabot/composer"
 require "dependabot/devcontainers"
 require "dependabot/docker"
+require "dependabot/docker_compose"
+require "dependabot/dotnet_sdk"
 require "dependabot/elm"
 require "dependabot/git_submodules"
 require "dependabot/github_actions"
@@ -114,6 +124,7 @@ require "dependabot/python"
 require "dependabot/pub"
 require "dependabot/swift"
 require "dependabot/terraform"
+require "dependabot/uv"
 require "dependabot/waf"
 
 # GitHub credentials with write permission to the repo you want to update
@@ -272,6 +283,10 @@ option_parse = OptionParser.new do |opts|
   opts.on("--pull-request",
           "Output pull request information metadata: title, description") do
     $options[:pull_request] = true
+  end
+
+  opts.on("--enable-beta-ecosystems", "Enable beta ecosystems") do |_value|
+    Dependabot::Experiments.register(:enable_beta_ecosystems, true)
   end
 end
 # rubocop:enable Metrics/BlockLength

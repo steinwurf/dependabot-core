@@ -133,6 +133,28 @@ RSpec.describe Dependabot::NpmAndYarn::YarnErrorHandler do
       end
     end
 
+    context "when the error message contains a deps resolution failed error" do
+      let(:error_message) do
+        "[YN0001]: Exception error, Detail: ➤ YN0000: · Yarn 4.5.1" \
+          "➤ YN0000: ┌ Resolution step" \
+          "::group::Resolution step" \
+          "➤ YN0085: │ + @testing-library/user-event@npm:14.6.1" \
+          "::endgroup::" \
+          "➤ YN0000: └ Completed in 0s 466ms" \
+          "➤ YN0060: │ react-dom is ...... non-overlapping ranges." \
+          "➤ YN0060: │ redux is listed by your non-overlapping ranges." \
+          "➤ YN0086: │ Some peer dependencies are incorrectly met by your project;" \
+          "➤ YN0086: │ Some peer dependencies are incorrectly met by dependencies;" \
+      end
+
+      it "raises a DependencyFileNotResolvable error" do
+        expect do
+          error_handler.handle_yarn_error(error, { yarn_lock: yarn_lock })
+        end.to raise_error(Dependabot::DependencyFileNotResolvable,
+                           /peer dependencies are incorrectly met/)
+      end
+    end
+
     context "when the error message contains SUB_DEP_LOCAL_PATH_TEXT" do
       let(:error_message) { "Some error occurred: refers to a non-existing file" }
 
@@ -207,6 +229,20 @@ RSpec.describe Dependabot::NpmAndYarn::YarnErrorHandler do
         end.to raise_error(Dependabot::DependencyFileNotResolvable,
                            "YN0001: │ Libzip Error: Failed to open the cache entry " \
                            "for @swc/core-darwin-arm64@npm:1.4.13: Not a zip archive")
+      end
+    end
+
+    context "when the error message contains requirement not specified error" do
+      let(:error_message) do
+        "[YN0001]: Exception error, Detail: ➤ YN0000: ┌ Resolution step" \
+          "kubernetes-dashboard@workspace:. provides @angular/core (pc7ae5) with version 16.2.1, which doesn't satisfy what codelyzer requests" # rubocop:disable Layout/LineLength
+      end
+
+      it "raises a DependencyFileNotResolvable error with the correct message" do
+        expect do
+          error_handler.handle_yarn_error(error, { yarn_lock: yarn_lock })
+        end.to raise_error(Dependabot::DependencyFileNotResolvable,
+                           "provides @angular/core (pc7ae5) with version 16.2.1, which doesn't satisfy what codelyzer requests") # rubocop:disable Layout/LineLength
       end
     end
 
@@ -580,6 +616,28 @@ RSpec.describe Dependabot::NpmAndYarn::YarnErrorHandler do
         end
       end
 
+      context "when error message doesn't match any YN0001.* regex patterns" do
+        let(:error_message) do
+          "[YN0001]: Exception error, Detail: ➤ YN0000: · Yarn 4.0.2" \
+            "➤ YN0000: ┌ Resolution step" \
+            "::group::Resolution step" \
+            "➤ YN0001: │ TypeError: @moonpig/common-logging-sqs-lambda@npm:1.1.2: Invalid URL" \
+            "at new URL (node:internal/url:806:29)" \
+            "at Q1t (/home/dependabot/dependabot-updater/repo/.yarn/releases/yarn-4.0.2.cjs:676:20388)" \
+            "at /home/dependabot/dependabot-updater/repo/.yarn/releases/yarn-4.0.2.cjs:676:18667" \
+            "at Object.ol (/home/dependabot/dependabot-updater/repo/.yarn/releases/yarn-4.0.2.cjs:140:53564)" \
+            "at KC (/home/dependabot/dependabot-updater/repo/.yarn/releases/yarn-4.0.2.cjs:676:18561)"
+        end
+
+        it "raises error with the raw message" do
+          expect do
+            error_handler.handle_yarn_error(error, { yarn_lock: yarn_lock })
+          end.to raise_error(
+            Dependabot::DependencyFileNotResolvable
+          )
+        end
+      end
+
       context "when out of diskspace error" do
         let(:error_message) do
           "fatal: sha1 file '/home/dependabot/dependabot-updater/repo/.git/index.lock' write error. Out of diskspace"
@@ -685,6 +743,18 @@ RSpec.describe Dependabot::NpmAndYarn::YarnErrorHandler do
       end
     end
 
+    context "when the exception message contains malformed registry error response" do
+      let(:error_message) do
+        "Received malformed response from registry for \"teste-react-jv\". The registry may be down."
+      end
+
+      it "raises the corresponding error class with the correct message" do
+        expect { error_handler.handle_group_patterns(error, usage_error_message, { yarn_lock: yarn_lock }) }
+          .to raise_error(Dependabot::DependencyFileNotResolvable,
+                          "Received malformed response from registry for \"teste-react-jv\". The registry may be down.")
+      end
+    end
+
     context "when the error message contains Permission denied error" do
       let(:error_message) do
         "https://npm.pkg.github.com/breakthroughbehavioralinc/webpack: Permission denied"
@@ -738,6 +808,31 @@ RSpec.describe Dependabot::NpmAndYarn::YarnErrorHandler do
         expect { error_handler.handle_group_patterns(error, usage_error_message, { yarn_lock: yarn_lock }) }
           .to raise_error(Dependabot::DependencyFileNotResolvable,
                           "npm package \"typescript-react-apollo\" does not exist under owner \"graphql-codegen\"")
+      end
+    end
+
+    context "when the error message contains variation of Couldn't find package error" do
+      let(:error_message) do
+        "Couldn't find package \"source-map-explorer\" on the \"npm\" registry."
+      end
+
+      it "raises the corresponding error class with the correct message" do
+        expect { error_handler.handle_group_patterns(error, usage_error_message, { yarn_lock: yarn_lock }) }
+          .to raise_error(Dependabot::DependencyFileNotResolvable,
+                          "Couldn't find package \"source-map-explorer\" on the \"npm\" registry.")
+      end
+    end
+
+    context "when the error message contains variation of Couldn't find package error" do
+      let(:error_message) do
+        "Couldn't find package \"dl-core-js@^1.0.0\" required by \"mahso-slide-gen@0.1.0\" on the \"npm\" registry."
+      end
+
+      it "raises the corresponding error class with the correct message" do
+        expect { error_handler.handle_group_patterns(error, usage_error_message, { yarn_lock: yarn_lock }) }
+          .to raise_error(Dependabot::DependencyFileNotResolvable,
+                          "Couldn't find package \"dl-core-js@^1.0.0\" required" \
+                          " by \"mahso-slide-gen@0.1.0\" on the \"npm\" registry.")
       end
     end
 
